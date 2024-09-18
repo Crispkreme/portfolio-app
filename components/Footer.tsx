@@ -2,15 +2,17 @@ import React from 'react'
 import MagicButton from './ui/MagicButton'
 import { FaLocationArrow } from 'react-icons/fa'
 import { socialMedia } from '@/data';
+import Image from 'next/image';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
     return (
         <footer className='w-full pt-2 pb-10' id='contact'>
             <div className='w-full absolute left-0 -bottom-72 min-h-96'>
-                <img 
+                <Image 
                     src="/footer-grid.svg" 
                     alt="grid"
+                    layout="fill"
                     className='w-full h-full opacity-50'
                 />
             </div>
@@ -35,7 +37,12 @@ const Footer = () => {
                 <div className='flex items-center md:gap-3 gap-6'>
                     {socialMedia.map((profile) => (
                         <div key={profile.id} className='flex w-10 h-10 cursor-pointer justify-center items-center backdrop-filter backdrop-blur-lg saturate-180 bg-opacity-75 bg-black-200 rounded-lg border border-black-300'>
-                            <img src={profile.img} alt={profile.img} width={20} height={20}/>
+                            <Image 
+                                src={profile.img} 
+                                alt={profile.img} 
+                                width={20} 
+                                height={20}
+                            />
                         </div>        
                     ))}
                 </div>
