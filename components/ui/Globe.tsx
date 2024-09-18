@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
 import { useThree, Object3DNode, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "@/data/globe.json";
+
 declare module "@react-three/fiber" {
   interface ThreeElements {
     threeGlobe: Object3DNode<ThreeGlobe, typeof ThreeGlobe>;
@@ -91,7 +92,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
     ...globeConfig,
   };
  
-  const _buildMaterial = () => {
+  const _buildMaterial = useCallback(() => {
     if (!globeRef.current) return;
  
     const globeMaterial = globeRef.current.globeMaterial() as unknown as {
@@ -104,8 +105,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
     globeMaterial.emissive = new Color(globeConfig.emissive);
     globeMaterial.emissiveIntensity = globeConfig.emissiveIntensity || 0.1;
     globeMaterial.shininess = globeConfig.shininess || 0.9;
-  };
-  const _buildData = () => {
+  }, [globeRef.current]);
+  const _buildData = useCallback(() => {
     const arcs = data;
     const points = [];
     for (let i = 0; i < arcs.length; i++) {
@@ -138,7 +139,11 @@ export function Globe({ globeConfig, data }: WorldProps) {
     );
  
     setGlobeData(filteredPoints);
-  };
+  }, [
+    data,
+    defaultProps.pointSize
+  ]);
+
   const startAnimation = () => {
     if (!globeRef.current || !globeData) return;
  
@@ -182,7 +187,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
       _buildData();
       _buildMaterial();
     }
-  }, [globeRef.current, _buildData, _buildMaterial]);
+  }, [_buildData, _buildMaterial]);
+  
   useEffect(() => {
     if (globeRef.current && globeData) {
       globeRef.current
@@ -205,32 +211,34 @@ export function Globe({ globeConfig, data }: WorldProps) {
     defaultProps.showAtmosphere,
     startAnimation
   ]);
+  
   useEffect(() => {
     if (!globeRef.current || !globeData) return;
- 
+  
     const interval = setInterval(() => {
       if (!globeRef.current || !globeData) return;
+  
       numbersOfRings = genRandomNumbers(
         0,
         data.length,
         Math.floor((data.length * 4) / 5)
       );
- 
+  
       globeRef.current.ringsData(
         globeData.filter((d, i) => numbersOfRings.includes(i))
       );
     }, 2000);
- 
+  
     return () => {
       clearInterval(interval);
     };
-  }, [globeRef.current, globeData, data.length]);
- 
+  }, [globeData, data.length]);
+  
   return (
     <>
       <threeGlobe ref={globeRef} />
     </>
-  );
+  );  
 }
  
 export function WebGLRendererConfig() {
