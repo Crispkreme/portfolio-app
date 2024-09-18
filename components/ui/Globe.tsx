@@ -147,9 +147,9 @@ export function Globe({ globeConfig, data }: WorldProps) {
     defaultProps.pointSize
   ]);
 
-  const startAnimation = () => {
+  const startAnimation = useCallback(() => {
     if (!globeRef.current || !globeData) return;
- 
+
     globeRef.current
       .arcsData(data)
       .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
@@ -157,24 +157,20 @@ export function Globe({ globeConfig, data }: WorldProps) {
       .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
       .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
       .arcColor((e?: any) => (e as { color: string }).color)
-      .arcAltitude((e) => {
-        return (e as { arcAlt: number }).arcAlt * 1;
-      })
-      .arcStroke(() => {
-        return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)];
-      })
+      .arcAltitude((e) => (e as { arcAlt: number }).arcAlt * 1)
+      .arcStroke(() => [0.32, 0.28, 0.3][Math.round(Math.random() * 2)])
       .arcDashLength(defaultProps.arcLength)
       .arcDashInitialGap((e) => (e as { order: number }).order * 1)
       .arcDashGap(15)
       .arcDashAnimateTime(() => defaultProps.arcTime);
- 
+
     globeRef.current
       .pointsData(data)
       .pointColor((e) => (e as { color: string }).color)
       .pointsMerge(true)
       .pointAltitude(0.0)
       .pointRadius(2);
- 
+
     globeRef.current
       .ringsData([])
       .ringColor((e: any) => (t: any) => e.color(t))
@@ -183,14 +179,15 @@ export function Globe({ globeConfig, data }: WorldProps) {
       .ringRepeatPeriod(
         (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
       );
-  };
+  }, [data, defaultProps, globeData]);
 
   useEffect(() => {
     if (globeRef.current) {
       _buildData();
       _buildMaterial();
+      startAnimation(); 
     }
-  }, [_buildData, _buildMaterial]);
+  }, [_buildData, _buildMaterial, startAnimation]);
   
   useEffect(() => {
     if (globeRef.current && globeData) {
