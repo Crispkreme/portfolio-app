@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -7,9 +7,8 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-import { useRef } from "react";
 import { cn } from "@/lib/utils";
- 
+
 export function MovingBorders({
   borderRadius = "1.75rem",
   children,
@@ -22,12 +21,12 @@ export function MovingBorders({
 }: {
   borderRadius?: string;
   children: React.ReactNode;
-  as?: any;
+  as?: React.ElementType;
   containerClassName?: string;
   borderClassName?: string;
   duration?: number;
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }) {
   return (
     <Component
@@ -53,7 +52,7 @@ export function MovingBorders({
           />
         </MovingBorder>
       </div>
- 
+
       <div
         className={cn(
           "relative bg-slate-900/[0.8] border border-slate-800 backdrop-blur-xl text-white flex items-center justify-center w-full h-full text-sm antialiased",
@@ -68,7 +67,7 @@ export function MovingBorders({
     </Component>
   );
 }
- 
+
 export const MovingBorder = ({
   children,
   duration = 2000,
@@ -80,11 +79,11 @@ export const MovingBorder = ({
   duration?: number;
   rx?: string;
   ry?: string;
-  [key: string]: any;
+  [key: string]: unknown; 
 }) => {
-  const pathRef = useRef<any>();
+  const pathRef = useRef<SVGRectElement | null>(null); 
   const progress = useMotionValue<number>(0);
- 
+
   useAnimationFrame((time) => {
     const length = pathRef.current?.getTotalLength();
     if (length) {
@@ -92,7 +91,7 @@ export const MovingBorder = ({
       progress.set((time * pxPerMillisecond) % length);
     }
   });
- 
+
   const x = useTransform(
     progress,
     (val) => pathRef.current?.getPointAtLength(val).x
@@ -101,9 +100,9 @@ export const MovingBorder = ({
     progress,
     (val) => pathRef.current?.getPointAtLength(val).y
   );
- 
+
   const transform = useMotionTemplate`translateX(${x}px) translateY(${y}px) translateX(-50%) translateY(-50%)`;
- 
+
   return (
     <>
       <svg
