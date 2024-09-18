@@ -40,7 +40,13 @@ export const FloatingNav = ({
       }
     }
   });
- 
+  
+  interface NavItem {
+    link: string;
+    icon?: React.ReactNode;
+    name: string;
+  }
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -60,7 +66,7 @@ export const FloatingNav = ({
           className
         )}
       >
-        {navItems.map((navItem: any, idx: number) => (
+        {navItems.map((navItem: NavItem, idx: number) => (
           <Link
             key={`link=${idx}`}
             href={navItem.link}
@@ -68,10 +74,11 @@ export const FloatingNav = ({
               "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500"
             )}
           >
-            <span className="block sm:hidden">{navItem.icon}</span>
+            {navItem.icon && <span className="block sm:hidden">{navItem.icon}</span>}
             <span className="hidden sm:block text-sm">{navItem.name}</span>
           </Link>
         ))}
+
       </motion.div>
     </AnimatePresence>
   );
