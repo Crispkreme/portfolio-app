@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 
 export const InfiniteMovingCards = ({
@@ -24,6 +24,32 @@ export const InfiniteMovingCards = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLUListElement>(null);
 
+  const getDirection = useCallback(() => {
+    if (containerRef.current) {
+      containerRef.current.style.setProperty(
+        "--animation-direction",
+        direction === "left" ? "forwards" : "reverse"
+      );
+    }
+  }, [direction]);
+  const getSpeed = useCallback(() => {
+    if (containerRef.current) {
+      let duration;
+      switch (speed) {
+        case "fast":
+          duration = "20s";
+          break;
+        case "normal":
+          duration = "40s";
+          break;
+        default:
+          duration = "80s";
+          break;
+      }
+      containerRef.current.style.setProperty("--animation-duration", duration);
+    }
+  }, [speed]);
+
   useEffect(() => {
     function addAnimation() {
       if (containerRef.current && scrollerRef.current) {
@@ -40,34 +66,7 @@ export const InfiniteMovingCards = ({
     }
 
     addAnimation();
-  }, [direction, speed]);
-
-  const getDirection = () => {
-    if (containerRef.current) {
-      containerRef.current.style.setProperty(
-        "--animation-direction",
-        direction === "left" ? "forwards" : "reverse"
-      );
-    }
-  };
-
-  const getSpeed = () => {
-    if (containerRef.current) {
-      let duration;
-      switch (speed) {
-        case "fast":
-          duration = "20s";
-          break;
-        case "normal":
-          duration = "40s";
-          break;
-        default:
-          duration = "80s";
-          break;
-      }
-      containerRef.current.style.setProperty("--animation-duration", duration);
-    }
-  };
+  }, [direction, speed, getDirection, getSpeed]);
 
   return (
     <div
