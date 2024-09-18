@@ -94,18 +94,21 @@ export function Globe({ globeConfig, data }: WorldProps) {
  
   const _buildMaterial = useCallback(() => {
     if (!globeRef.current) return;
- 
+  
     const globeMaterial = globeRef.current.globeMaterial() as unknown as {
       color: Color;
       emissive: Color;
       emissiveIntensity: number;
       shininess: number;
     };
+    
     globeMaterial.color = new Color(globeConfig.globeColor);
     globeMaterial.emissive = new Color(globeConfig.emissive);
     globeMaterial.emissiveIntensity = globeConfig.emissiveIntensity || 0.1;
     globeMaterial.shininess = globeConfig.shininess || 0.9;
-  }, [globeRef.current]);
+  
+  }, [globeConfig.globeColor, globeConfig.emissive, globeConfig.emissiveIntensity, globeConfig.shininess]);
+    
   const _buildData = useCallback(() => {
     const arcs = data;
     const points = [];
