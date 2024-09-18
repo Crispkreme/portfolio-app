@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { BackgroundGradientAnimation } from "./BackgroundGradientAnimation";
-import { Globe } from "./Globe";
 import Lottie from "react-lottie";
 import animationData from '@/data/confetti.json'
 import MagicButton from "./MagicButton";
