@@ -74,8 +74,23 @@ export function Globe({ globeConfig, data }: WorldProps) {
   >(null);
  
   const globeRef = useRef<ThreeGlobe | null>(null);
- 
-  const defaultProps = useMemo(() => ({
+  interface DefaultProps {
+    pointSize: number;
+    atmosphereColor: string;
+    showAtmosphere: boolean;
+    atmosphereAltitude: number;
+    polygonColor: string;
+    globeColor: string;
+    emissive: string;
+    emissiveIntensity: number;
+    shininess: number;
+    arcTime: number;
+    arcLength: number;
+    rings: number;
+    maxRings: number;
+  }
+
+  const defaultProps = useMemo<DefaultProps>(() => ({
     pointSize: 1,
     atmosphereColor: "#ffffff",
     showAtmosphere: true,
@@ -149,38 +164,38 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
   const startAnimation = useCallback(() => {
     if (!globeRef.current || !globeData) return;
-
+  
     globeRef.current
       .arcsData(data)
-      .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
-      .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
-      .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
-      .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
-      .arcColor((e?: any) => (e as { color: string }).color)
-      .arcAltitude((e) => (e as { arcAlt: number }).arcAlt * 1)
+      .arcStartLat((d: object) => (d as { startLat: number }).startLat * 1)
+      .arcStartLng((d: object) => (d as { startLng: number }).startLng * 1)
+      .arcEndLat((d: object) => (d as { endLat: number }).endLat * 1)
+      .arcEndLng((d: object) => (d as { endLng: number }).endLng * 1)
+      .arcColor((e: object) => (e as { color: string }).color)
+      .arcAltitude((e: object) => (e as { arcAlt: number }).arcAlt * 1)
       .arcStroke(() => [0.32, 0.28, 0.3][Math.round(Math.random() * 2)])
       .arcDashLength(defaultProps.arcLength)
-      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
+      .arcDashInitialGap((e: object) => (e as { order: number }).order * 1)
       .arcDashGap(15)
       .arcDashAnimateTime(() => defaultProps.arcTime);
-
+  
     globeRef.current
       .pointsData(data)
-      .pointColor((e) => (e as { color: string }).color)
+      .pointColor((e: object) => (e as { color: string }).color)
       .pointsMerge(true)
       .pointAltitude(0.0)
       .pointRadius(2);
-
+  
     globeRef.current
       .ringsData([])
-      .ringColor((e: any) => (t: any) => e.color(t))
+      .ringColor((e: object) => (t: number) => (e as { color: (t: number) => string }).color(t))
       .ringMaxRadius(defaultProps.maxRings)
       .ringPropagationSpeed(RING_PROPAGATION_SPEED)
       .ringRepeatPeriod(
         (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
       );
   }, [data, defaultProps, globeData]);
-
+  
   useEffect(() => {
     if (globeRef.current) {
       _buildData();
