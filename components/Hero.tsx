@@ -26,16 +26,16 @@ const Hero = () => {
         <div className='max-w-[89vw] md:max-w-2xl lg:max-w-[60vw] flex flex-col items-center justify-center'>
           
           <h2 className='uppercase text-blue-100 max-w-80 text-xs text-center tracking-widest'>
-            Dynamic Web Magic with Next.js
+            Personal Portfolio
           </h2>
 
           <TextGenerateEffect 
             className='text-center text-[40px] md:text-5xl lg:text-6xl'
-            words='Transforming Concept into Seamless User sExperiences' 
+            words='Crafting Seamless Digital Experiences from Vision to Reality' 
           />
 
           <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
-            Hi, I&apos;m Marvin, a Full Stack Developer based in General Santos City., Philippines, 9500
+            Hi, I&apos;m Marvin, a Full Stack Developer from General Santos City, Philippines, skilled in building dynamic web applications with Laravel, React, and WordPress. Let's turn your ideas into reality!
           </p>
 
           <a href="#about">
